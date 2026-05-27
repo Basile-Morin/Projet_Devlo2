@@ -1,5 +1,6 @@
 import etude.Epreuve;
 import etude.Etudiant;
+import fraude.FormulaireFraude;
 import fraude.Fraude;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
