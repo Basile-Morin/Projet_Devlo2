@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FormulaireFraudeTest {
-    FormulaireFraude formulaire;
+    public FormulaireFraude formulaire;
 
     private Etudiant creerEtudiant(String numero) {
         Etudiant e = new Etudiant();
@@ -31,7 +31,7 @@ class FormulaireFraudeTest {
 
     @BeforeEach
     void initialiserFormulaire(){
-        formulaire = new FormulaireFraude();
+        public formulaire = new FormulaireFraude();
     }
 
     @Test
