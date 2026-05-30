@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Epreuve {
-    String codeECUE;
-    LocalDate date;
-    LocalTime heure;
-    int duree;
-    Modalite modalite;
+    private String codeECUE;
+    private LocalDate date;
+    private LocalTime heure;
+    private int duree;
+    private Modalite modalite;
 
     public String getCodeECUE() {
         return codeECUE;

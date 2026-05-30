@@ -1,6 +1,6 @@
 package etude;
 
-enum Modalite {
+public enum Modalite {
     EXAMEN_ECRIT,
     ORAL,
     QCM,

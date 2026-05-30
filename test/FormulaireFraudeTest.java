@@ -1,10 +1,12 @@
 import etude.Epreuve;
 import etude.Etudiant;
 import fraude.Fraude;
+import fraude.FraudeIAG;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +21,7 @@ class FormulaireFraudeTest {
     }
 
     private Fraude creerFraude(Etudiant... etudiants) {
-        Fraude fraude = new Fraude();
+        Fraude fraude = new FraudeIAG();
 
         for (Etudiant etudiant : etudiants) {
             fraude.addEtudiant(etudiant);
@@ -56,11 +58,12 @@ class FormulaireFraudeTest {
         Fraude fraude2 = creerFraude(e3, e4);
 
         List<Fraude> fraudes = List.of(fraude1,fraude2);
+        formulaire = new FormulaireFraude(fraudes);
 
         assertNotNull(formulaire.getEtudiants(), "La liste des étudiants ne doit pas être null après le constructeur");
         assertNotNull(formulaire.getFraudes(), "La liste des fraudes ne doit pas être null après le constructeur");
-        assertTrue(formulaire.getEtudiants().isEmpty(), "La liste des étudiants doit être vide à la création");
-        assertTrue(formulaire.getFraudes().isEmpty(), "La liste des fraudes doit être vide à la création");
+        assertTrue(formulaire.getEtudiants().containsAll(List.of(e1,e2,e3,e4)), "La liste des étudiants doit contenir les étudiants qui sont concernés par les fraudes");
+        assertTrue(formulaire.getFraudes().containsAll(fraudes), "La liste des fraudes doit contenir les fraudes passées en paramètres");
         assertNotNull(formulaire.getDateCreation(), "La date de création doit être initialisée");
         assertNotNull(formulaire.getDateDerniereModification(), "La date de dernière modification doit être initialisée");
         assertEquals(formulaire.getDateCreation(), formulaire.getDateDerniereModification(), "À la création, la date de dernière modification doit être égale à la date de création");
@@ -72,7 +75,7 @@ class FormulaireFraudeTest {
         Etudiant e2 = creerEtudiant("002");
         Fraude fraude = creerFraude(e1, e2);
 
-        formulaire.ajouterFraudeConstatee(fraude);
+        formulaire = new FormulaireFraude(List.of(fraude));
 
         assertEquals(1, formulaire.getFraudes().size(), "Le formulaire doit contenir exactement une fraude après l'ajout");
         assertTrue(formulaire.getFraudes().contains(fraude), "La fraude ajoutée doit être présente dans le formulaire");
@@ -90,8 +93,7 @@ class FormulaireFraudeTest {
         Fraude fraude1 = creerFraude(e1, e2);
         Fraude fraude2 = creerFraude(e2, e3);
 
-        formulaire.ajouterFraudeConstatee(fraude1);
-        formulaire.ajouterFraudeConstatee(fraude2);
+        formulaire = new FormulaireFraude(List.of(fraude1,fraude2));
 
         assertEquals(2, formulaire.getFraudes().size(), "Le formulaire doit contenir les deux fraudes ajoutées");
         assertEquals(3, formulaire.getEtudiants().size(), "Un étudiant présent dans plusieurs fraudes ne doit apparaître qu'une seule fois");
@@ -101,7 +103,7 @@ class FormulaireFraudeTest {
     }
 
     @Test
-    void retirerFraudeConstateeSupprimeSeulementLesEtudiantsQuiNeSontPlusLiesAUneFraude() {
+    void retirerFraudeConstateeSupprimeSeulementLesEtudiantsQuiNeSontPlusLiesAUneFraudeIAG() {
         Etudiant e1 = creerEtudiant("001");
         Etudiant e2 = creerEtudiant("002");
         Etudiant e3 = creerEtudiant("003");
@@ -109,8 +111,7 @@ class FormulaireFraudeTest {
         Fraude fraude1 = creerFraude(e1, e2);
         Fraude fraude2 = creerFraude(e2, e3);
 
-        formulaire.ajouterFraudeConstatee(fraude1);
-        formulaire.ajouterFraudeConstatee(fraude2);
+        formulaire = new FormulaireFraude(List.of(fraude1,fraude2));
 
         formulaire.retirerFraudeConstatee(fraude1);
 
@@ -130,7 +131,7 @@ class FormulaireFraudeTest {
 
         Fraude fraude = creerFraude(e1, e2);
 
-        formulaire.ajouterFraudeConstatee(fraude);
+        formulaire = new FormulaireFraude(List.of(fraude));
 
         formulaire.retirerFraudeConstatee(fraude);
 
@@ -147,8 +148,7 @@ class FormulaireFraudeTest {
         Fraude fraude1 = creerFraude(e1, e2);
         Fraude fraude2 = creerFraude(e2, e3);
 
-        formulaire.ajouterFraudeConstatee(fraude1);
-        formulaire.ajouterFraudeConstatee(fraude2);
+        formulaire = new FormulaireFraude(List.of(fraude1,fraude2));
 
         assertEquals(2, formulaire.getFraudes().size(), "Le constructeur doit ajouter toutes les fraudes fournies");
         assertEquals(3, formulaire.getEtudiants().size(), "Le constructeur doit ajouter tous les étudiants liés aux fraudes sans doublon");
@@ -161,14 +161,12 @@ class FormulaireFraudeTest {
 
     @Test
     void getFraudesRetourneUneListeNonModifiable() {
-        FormulaireFraude formulaire = new FormulaireFraude();
 
-        assertThrows(UnsupportedOperationException.class, () -> formulaire.getFraudes().add(new Fraude()), "La liste retournée par getFraudes() ne doit pas être modifiable");
+        assertThrows(UnsupportedOperationException.class, () -> formulaire.getFraudes().add(new FraudeIAG()), "La liste retournée par getFraudes() ne doit pas être modifiable");
     }
 
     @Test
     void getEtudiantsRetourneUneListeNonModifiable() {
-        FormulaireFraude formulaire = new FormulaireFraude();
         Etudiant e1 = creerEtudiant("001");
 
         assertThrows(UnsupportedOperationException.class, () -> formulaire.getEtudiants().add(e1), "La liste retournée par getEtudiants() ne doit pas être modifiable");
@@ -176,7 +174,6 @@ class FormulaireFraudeTest {
 
     @Test
     void ajouterFraudeConstateeMetAJourLaDateDeDerniereModification() {
-        FormulaireFraude formulaire = new FormulaireFraude();
         LocalDateTime avantModification = formulaire.getDateDerniereModification();
 
         Etudiant e1 = creerEtudiant("001");
@@ -192,9 +189,7 @@ class FormulaireFraudeTest {
         Etudiant e1 = creerEtudiant("001");
         Fraude fraude = creerFraude(e1);
 
-        FormulaireFraude formulaire = new FormulaireFraude();
-        formulaire.ajouterFraudeConstatee(fraude);
-
+        FormulaireFraude formulaire = new FormulaireFraude(List.of(fraude));
         LocalDateTime avantRetrait = formulaire.getDateDerniereModification();
 
         formulaire.retirerFraudeConstatee(fraude);
@@ -204,7 +199,6 @@ class FormulaireFraudeTest {
 
     @Test
     void setEtGetEpreuveFonctionnentCorrectement() {
-        FormulaireFraude formulaire = new FormulaireFraude();
         Epreuve epreuve = new Epreuve();
 
         formulaire.setEpreuve(epreuve);
@@ -214,8 +208,6 @@ class FormulaireFraudeTest {
 
     @Test
     void setEtGetIdFonctionnentCorrectement() {
-        FormulaireFraude formulaire = new FormulaireFraude();
-
         formulaire.setId(42);
 
         assertEquals(42, formulaire.getId(), "getId() doit retourner l'identifiant passé à setId()");
@@ -223,7 +215,6 @@ class FormulaireFraudeTest {
 
     @Test
     void setEtGetDateCreationFonctionnentCorrectement() {
-        FormulaireFraude formulaire = new FormulaireFraude();
         LocalDateTime dateCreation = LocalDateTime.of(2026, 5, 20, 10, 30);
 
         formulaire.setDateCreation(dateCreation);
@@ -233,11 +224,136 @@ class FormulaireFraudeTest {
 
     @Test
     void setEtGetDateDerniereModificationFonctionnentCorrectement() {
-        FormulaireFraude formulaire = new FormulaireFraude();
         LocalDateTime dateModification = LocalDateTime.of(2026, 5, 20, 11, 45);
 
         formulaire.setDateDerniereModification(dateModification);
 
         assertEquals(dateModification, formulaire.getDateDerniereModification(), "getDateDerniereModification() doit retourner la date passée à setDateDerniereModification()");
+    }
+
+    @Test
+    void constructeurAvecListeFraudesNullInitialiseUnFormulaireVide() {
+        formulaire = new FormulaireFraude(null);
+
+        assertNotNull(formulaire.getFraudes(), "La liste des fraudes ne doit pas être null");
+        assertNotNull(formulaire.getEtudiants(), "La liste des étudiants ne doit pas être null");
+        assertTrue(formulaire.getFraudes().isEmpty(), "La liste des fraudes doit être vide si on passe null au constructeur");
+        assertTrue(formulaire.getEtudiants().isEmpty(), "La liste des étudiants doit être vide si on passe null au constructeur");
+        assertNotNull(formulaire.getDateCreation(), "La date de création doit être initialisée");
+        assertNotNull(formulaire.getDateDerniereModification(), "La date de dernière modification doit être initialisée");
+    }
+
+
+    @Test
+    void ajouterFraudeConstateeNullNeModifiePasLeFormulaire() {
+        LocalDateTime dateAvant = LocalDateTime.of(2026, 5, 20, 10, 0);
+        formulaire.setDateDerniereModification(dateAvant);
+
+        formulaire.ajouterFraudeConstatee(null);
+
+        assertTrue(formulaire.getFraudes().isEmpty(), "Aucune fraude ne doit être ajoutée si la fraude est null");
+        assertTrue(formulaire.getEtudiants().isEmpty(), "Aucun étudiant ne doit être ajouté si la fraude est null");
+        assertEquals(dateAvant, formulaire.getDateDerniereModification(), "La date de modification ne doit pas changer si la fraude est null");
+    }
+
+
+    @Test
+    void retirerFraudeConstateeNullNeModifiePasLeFormulaire() {
+        Etudiant e1 = creerEtudiant("001");
+        Fraude fraude = creerFraude(e1);
+        formulaire = new FormulaireFraude(List.of(fraude));
+
+        LocalDateTime dateAvant = LocalDateTime.of(2026, 5, 20, 10, 0);
+        formulaire.setDateDerniereModification(dateAvant);
+
+        formulaire.retirerFraudeConstatee(null);
+
+        assertEquals(1, formulaire.getFraudes().size(), "La fraude déjà présente ne doit pas être retirée");
+        assertTrue(formulaire.getFraudes().contains(fraude), "La fraude doit toujours être présente");
+        assertTrue(formulaire.getEtudiants().contains(e1), "L'étudiant doit toujours être présent");
+        assertEquals(dateAvant, formulaire.getDateDerniereModification(), "La date de modification ne doit pas changer si on retire null");
+    }
+
+
+    @Test
+    void retirerFraudeConstateeAbsenteNeModifiePasLeFormulaire() {
+        Etudiant e1 = creerEtudiant("001");
+        Etudiant e2 = creerEtudiant("002");
+
+        Fraude fraudePresente = creerFraude(e1);
+        Fraude fraudeAbsente = creerFraude(e2);
+
+        formulaire = new FormulaireFraude(List.of(fraudePresente));
+
+        LocalDateTime dateAvant = LocalDateTime.of(2026, 5, 20, 10, 0);
+        formulaire.setDateDerniereModification(dateAvant);
+
+        formulaire.retirerFraudeConstatee(fraudeAbsente);
+
+        assertEquals(1, formulaire.getFraudes().size(), "Aucune fraude ne doit être retirée si elle n'est pas présente");
+        assertTrue(formulaire.getFraudes().contains(fraudePresente), "La fraude présente doit rester dans le formulaire");
+        assertFalse(formulaire.getFraudes().contains(fraudeAbsente), "La fraude absente ne doit pas apparaître dans le formulaire");
+        assertTrue(formulaire.getEtudiants().contains(e1), "L'étudiant lié à la fraude présente doit rester");
+        assertFalse(formulaire.getEtudiants().contains(e2), "L'étudiant lié à la fraude absente ne doit pas être ajouté");
+        assertEquals(dateAvant, formulaire.getDateDerniereModification(), "La date de modification ne doit pas changer si aucune fraude n'est retirée");
+    }
+
+
+    @Test
+    void ajouterFraudeConstateeAvecListeEtudiantsNullAjouteSeulementLaFraude() {
+        Fraude fraude = new FraudeIAG() {
+            @Override
+            public List<Etudiant> getEtudiants() {
+                return null;
+            }
+        };
+
+        formulaire.ajouterFraudeConstatee(fraude);
+
+        assertEquals(1, formulaire.getFraudes().size(), "La fraude doit être ajoutée même si sa liste d'étudiants est null");
+        assertTrue(formulaire.getFraudes().contains(fraude), "La fraude doit être présente dans le formulaire");
+        assertTrue(formulaire.getEtudiants().isEmpty(), "Aucun étudiant ne doit être ajouté si la liste d'étudiants de la fraude est null");
+    }
+
+
+    @Test
+    void ajouterFraudeConstateeIgnoreLesEtudiantsNull() {
+        Etudiant e1 = creerEtudiant("001");
+        Etudiant e2 = creerEtudiant("002");
+
+        Fraude fraude = new FraudeIAG() {
+            @Override
+            public List<Etudiant> getEtudiants() {
+                return Arrays.asList(e1, null, e2);
+            }
+        };
+
+        formulaire.ajouterFraudeConstatee(fraude);
+
+        assertEquals(1, formulaire.getFraudes().size(), "La fraude doit être ajoutée");
+        assertEquals(2, formulaire.getEtudiants().size(), "Seuls les deux étudiants non null doivent être ajoutés");
+        assertTrue(formulaire.getEtudiants().contains(e1), "L'étudiant e1 doit être ajouté");
+        assertTrue(formulaire.getEtudiants().contains(e2), "L'étudiant e2 doit être ajouté");
+        assertFalse(formulaire.getEtudiants().contains(null), "La liste des étudiants du formulaire ne doit pas contenir null");
+    }
+
+
+    @Test
+    void setDateCreationNullNeModifiePasLaDateCreation() {
+        LocalDateTime dateAvant = formulaire.getDateCreation();
+
+        formulaire.setDateCreation(null);
+
+        assertEquals(dateAvant, formulaire.getDateCreation(), "La date de création ne doit pas changer si on passe null");
+    }
+
+
+    @Test
+    void setDateDerniereModificationNullNeModifiePasLaDateDerniereModification() {
+        LocalDateTime dateAvant = formulaire.getDateDerniereModification();
+
+        formulaire.setDateDerniereModification(null);
+
+        assertEquals(dateAvant, formulaire.getDateDerniereModification(), "La date de dernière modification ne doit pas changer si on passe null");
     }
 }

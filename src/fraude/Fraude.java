@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fraude {
+public abstract class Fraude {
     protected LocalDate dateReleve;
     protected String description;
     protected String contenu;
@@ -25,7 +25,7 @@ public class Fraude {
         etudiants.remove(etudiant);
     }
 
-    public List<Etudiant> getEtudiants() {return etudiants;}
+    public List<Etudiant> getEtudiants() {return List.copyOf(etudiants);}
 
     public void setEtudiants(List<Etudiant> etudiants) {this.etudiants = etudiants;}
 
