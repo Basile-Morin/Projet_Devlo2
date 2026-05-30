@@ -7,6 +7,11 @@ public class FraudeIAGConnectee extends FraudeIAG {
         super();
     }
 
+    public FraudeIAGConnectee(String nomService, String adresseIP){
+        super(nomService);
+        this.adresseIP=adresseIP;
+    }
+
     public String getAdresseIP() {
         return adresseIP;
     }

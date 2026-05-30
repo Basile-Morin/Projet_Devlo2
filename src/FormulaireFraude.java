@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-class FormulaireFraude {
+public class FormulaireFraude {
     private int id;
-    private LocalDateTime dateCreation ;
+    private LocalDateTime dateCreation;
     private LocalDateTime dateDerniereModification;
     private Epreuve epreuve;
-    private List<Etudiant> etudiants;
-    private List<Fraude> fraudes;
+    private final List<Etudiant> etudiants;
+    private final List<Fraude> fraudes;
 
     public FormulaireFraude() {
         etudiants = new ArrayList<>();
@@ -24,45 +24,60 @@ class FormulaireFraude {
     public FormulaireFraude(List<Fraude> fraudes) {
         etudiants = new ArrayList<>();
         this.fraudes = new ArrayList<>();
-        fraudes.forEach(this::ajouterFraudeConstatee);
+
+        if (fraudes != null) {
+            fraudes.forEach(this::ajouterFraudeConstatee);
+        }
 
         dateCreation = LocalDateTime.now();
         dateDerniereModification = dateCreation;
-
     }
 
+    public void retirerFraudeConstatee(Fraude fraude) {
+        if (fraude == null) {
+            return;
+        }
 
+        boolean fraudeRetiree = fraudes.remove(fraude);
 
-    public void retirerFraudeConstatee(Fraude fraude){
-        fraudes.remove(fraude);
+        if (!fraudeRetiree) {
+            return;
+        }
 
         List<Etudiant> aSupprimer = new ArrayList<>(etudiants);
 
-        fraudes.forEach(fraudeRestante ->
-                aSupprimer.removeAll(fraudeRestante.getEtudiants())
-        );
+        fraudes.forEach(fraudeRestante -> {
+            if (fraudeRestante.getEtudiants() != null) {
+                aSupprimer.removeAll(fraudeRestante.getEtudiants());
+            }
+        });
 
         etudiants.removeAll(aSupprimer);
         dateDerniereModification = LocalDateTime.now();
     }
 
+    public void ajouterFraudeConstatee(Fraude fraude) {
+        if (fraude == null) {
+            return;
+        }
 
-    public void ajouterFraudeConstatee(Fraude fraude){
         fraudes.add(fraude);
-        fraude.getEtudiants().stream()
-                .filter(etudiant -> !this.etudiants.contains(etudiant))
-                .forEach(etudiant -> etudiants.add(etudiant));
+
+        if (fraude.getEtudiants() != null) {
+            fraude.getEtudiants().stream()
+                    .filter(etudiant -> etudiant != null)
+                    .filter(etudiant -> !this.etudiants.contains(etudiant))
+                    .forEach(etudiants::add);
+        }
 
         dateDerniereModification = LocalDateTime.now();
     }
 
-
-    //GETTERS & SETTERS
+    // GETTERS & SETTERS
 
     public List<Fraude> getFraudes() {
         return List.copyOf(fraudes);
     }
-
 
     public List<Etudiant> getEtudiants() {
         return List.copyOf(etudiants);
@@ -73,6 +88,7 @@ class FormulaireFraude {
     }
 
     public void setEpreuve(Epreuve epreuve) {
+
         dateDerniereModification = LocalDateTime.now();
         this.epreuve = epreuve;
     }
@@ -82,6 +98,10 @@ class FormulaireFraude {
     }
 
     public void setDateDerniereModification(LocalDateTime dateDerniereModification) {
+        if (dateDerniereModification == null) {
+            return;
+        }
+
         this.dateDerniereModification = dateDerniereModification;
     }
 
@@ -90,6 +110,10 @@ class FormulaireFraude {
     }
 
     public void setDateCreation(LocalDateTime dateCreation) {
+        if (dateCreation == null) {
+            return;
+        }
+
         dateDerniereModification = LocalDateTime.now();
         this.dateCreation = dateCreation;
     }

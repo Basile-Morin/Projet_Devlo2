@@ -1,5 +1,7 @@
 package etude;
 
+import java.util.Objects;
+
 public class Etudiant {
     String numeroApprenant;
     String nom;
@@ -43,5 +45,17 @@ public class Etudiant {
 
     public void setCursus(Cursus cursus) {
         this.cursus = cursus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Etudiant etudiant = (Etudiant) o;
+        return Objects.equals(numeroApprenant, etudiant.numeroApprenant);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(numeroApprenant);
     }
 }
