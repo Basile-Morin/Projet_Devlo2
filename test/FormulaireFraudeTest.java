@@ -1,6 +1,5 @@
 import etude.Epreuve;
 import etude.Etudiant;
-import fraude.FormulaireFraude;
 import fraude.Fraude;
 import fraude.FraudeIAG;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +32,7 @@ class FormulaireFraudeTest {
 
     @BeforeEach
     void initialiserFormulaire(){
-        public formulaire = new FormulaireFraude();
+        formulaire = new FormulaireFraude();
     }
 
     @Test
