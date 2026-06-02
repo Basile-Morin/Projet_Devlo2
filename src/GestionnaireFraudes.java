@@ -13,8 +13,6 @@ public class GestionnaireFraudes {
     public void ajouterFormulaire(FormulaireFraude formulaire) {
         this.formulaires.add(formulaire);
     }
-
-
     public boolean supprimerFormulaire(int id) {
         for(FormulaireFraude f: formulaires){
             if(f.getId() == id){
@@ -77,4 +75,18 @@ public class GestionnaireFraudes {
         }
         return resultat;
     }
+
+    public List<FormulaireFraude> getFormulaires() {
+        return formulaires;
+    }
+
+    public List<Etudiant> getEtudiants() {
+        return etudiants;
+    }
+
+    public List<Epreuve> getEpreuves() {
+        return epreuves;
+    }
 }
+
+
