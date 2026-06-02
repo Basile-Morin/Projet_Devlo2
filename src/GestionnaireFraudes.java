@@ -8,20 +8,33 @@ public class GestionnaireFraudes {
     private List<FormulaireFraude> formulaires =  new ArrayList<>();
     private List<Etudiant> etudiants = new ArrayList<>();
     private List<Epreuve> epreuves = new ArrayList<>();
+    private int currentId=0;
 
 
     public void ajouterFormulaire(FormulaireFraude formulaire) {
         this.formulaires.add(formulaire);
+
+        if (!epreuves.contains(formulaire.getEpreuve())) {
+            epreuves.add(formulaire.getEpreuve());
+        }
+
+        for (Etudiant etudiant : formulaire.getEtudiants()) {
+            if (!etudiants.contains(etudiant)) {
+                etudiants.add(etudiant);
+            }
+        }
+        formulaire.setId(currentId++);
     }
 
-
     public boolean supprimerFormulaire(int id) {
-        for(FormulaireFraude f: formulaires){
-            if(f.getId() == id){
-                formulaires.remove(f);
+        for (int i = 0; i < formulaires.size(); i++) {
+            if (formulaires.get(i).getId() == id) {
+                formulaires.remove(i);
+                reconstruireEtudiantsEtEpreuves();
                 return true;
             }
         }
+
         return false;
     }
 
@@ -76,5 +89,34 @@ public class GestionnaireFraudes {
             }
         }
         return resultat;
+    }
+
+    public List<FormulaireFraude> getFormulaires() {
+        return formulaires;
+    }
+
+    public List<Etudiant> getEtudiants() {
+        return etudiants;
+    }
+
+    public List<Epreuve> getEpreuves() {
+        return epreuves;
+    }
+
+    public void reconstruireEtudiantsEtEpreuves() {
+        etudiants.clear();
+        epreuves.clear();
+
+        for (FormulaireFraude formulaire : formulaires) {
+            if (!epreuves.contains(formulaire.getEpreuve())) {
+                epreuves.add(formulaire.getEpreuve());
+            }
+
+            for (Etudiant etudiant : formulaire.getEtudiants()) {
+                if (!etudiants.contains(etudiant)) {
+                    etudiants.add(etudiant);
+                }
+            }
+        }
     }
 }
