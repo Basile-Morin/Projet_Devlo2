@@ -146,7 +146,7 @@ class GestionnaireFraudeTest {
 
         List<FormulaireFraude> resultats = gestionnaire.rechercherFormulairesParEtudiants(e1);
 
-        assertNotNull(resultats, "");
+        assertNotNull(resultats, "On devrait avoir une liste vide");
         assertTrue(resultats.isEmpty(), "");
     }
 
@@ -155,7 +155,7 @@ class GestionnaireFraudeTest {
     @Test
     void rechercherFormulaireParEpreuve_epreuvePresente_retourneLesFormulaires() {
         Epreuve epreuve = new Epreuve();
-        epreuve.setCodeECUE("MATH101");
+        epreuve.setCodeECUE("maths");
         FormulaireFraude f = new FormulaireFraude();
         f.setId(1);
         f.setEpreuve(epreuve);
@@ -163,16 +163,16 @@ class GestionnaireFraudeTest {
 
         List<FormulaireFraude> resultats = gestionnaire.rechercherFormulaireParEpreuve(epreuve);
 
-        assertEquals(1, resultats.size(), "");
-        assertTrue(resultats.contains(f), "");
+        assertEquals(1, resultats.size(), "On devrait avoir un formulaire");
+        assertTrue(resultats.contains(f), "Le gestionnaire devrait contenir le formulaire f");
     }
 
     @Test
     void rechercherFormulaireParEpreuve_epreuveAbsente_retourneListeVide() {
         Epreuve epreuve1 = new Epreuve();
-        epreuve1.setCodeECUE("MATH101");
+        epreuve1.setCodeECUE("maths");
         Epreuve epreuve2 = new Epreuve();
-        epreuve2.setCodeECUE("INFO202");
+        epreuve2.setCodeECUE("informatique");
         FormulaireFraude f = new FormulaireFraude();
         f.setEpreuve(epreuve1);
         gestionnaire.ajouterFormulaire(f);
@@ -186,7 +186,7 @@ class GestionnaireFraudeTest {
     @Test
     void rechercherFormulaireParEpreuve_memeEpreuvePlusieursFormulaires_retourneTous() {
         Epreuve epreuve = new Epreuve();
-        epreuve.setCodeECUE("MATH101");
+        epreuve.setCodeECUE("maths");
         FormulaireFraude f1 = new FormulaireFraude();
         f1.setId(1);
         f1.setEpreuve(epreuve);
