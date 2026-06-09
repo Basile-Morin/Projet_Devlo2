@@ -95,6 +95,10 @@ public class MenuConsole {
 
     public void afficherFormulaires() {
         System.out.println("===== FORMULAIRES =====");
+        if(gestionnaire.getFormulaires().isEmpty()) {
+            System.out.print("Aucun formulaire enregistré");
+            return;
+        }
 
         for (FormulaireFraude formulaire : gestionnaire.getFormulaires()) {
             System.out.println("\nFormulaire n°" + formulaire.getId());
