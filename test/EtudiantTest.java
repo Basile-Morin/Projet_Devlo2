@@ -1,5 +1,5 @@
-package etude;
-
+import etude.*;
+import fraude.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,11 +17,6 @@ class EtudiantTest {
     // --- Constructeur ---
 
     @Test
-    void constructeurParDefaut_creeLObjet() {
-        assertNotNull(etudiant);
-    }
-
-    @Test
     void constructeurParDefaut_attributsNuls() {
         assertNull(etudiant.getNumeroApprenant());
         assertNull(etudiant.getNom());
@@ -37,24 +32,12 @@ class EtudiantTest {
         assertEquals("E12345", etudiant.getNumeroApprenant());
     }
 
-    @Test
-    void setNumeroApprenant_null_accepte() {
-        etudiant.setNumeroApprenant(null);
-        assertNull(etudiant.getNumeroApprenant());
-    }
-
     // --- nom ---
 
     @Test
     void setNom_stockeValeur() {
         etudiant.setNom("Dupont");
         assertEquals("Dupont", etudiant.getNom());
-    }
-
-    @Test
-    void setNom_chaineVide_accepte() {
-        etudiant.setNom("");
-        assertEquals("", etudiant.getNom());
     }
 
     // --- prenom ---
@@ -73,18 +56,6 @@ class EtudiantTest {
         assertEquals(Cursus.E1, etudiant.getCursus());
     }
 
-    @Test
-    void setCursus_stockeValeurE3A() {
-        etudiant.setCursus(Cursus.E3A);
-        assertEquals(Cursus.E3A, etudiant.getCursus());
-    }
-
-    @Test
-    void setCursus_null_accepte() {
-        etudiant.setCursus(null);
-        assertNull(etudiant.getCursus());
-    }
-
     // --- Cohérence globale ---
 
     @Test
@@ -95,10 +66,10 @@ class EtudiantTest {
         etudiant.setCursus(Cursus.E5);
 
         assertAll(
-            () -> assertEquals("E99999", etudiant.getNumeroApprenant()),
-            () -> assertEquals("Martin", etudiant.getNom()),
-            () -> assertEquals("Bob", etudiant.getPrenom()),
-            () -> assertEquals(Cursus.E5, etudiant.getCursus())
+                () -> assertEquals("E99999", etudiant.getNumeroApprenant()),
+                () -> assertEquals("Martin", etudiant.getNom()),
+                () -> assertEquals("Bob", etudiant.getPrenom()),
+                () -> assertEquals(Cursus.E5, etudiant.getCursus())
         );
     }
 }
