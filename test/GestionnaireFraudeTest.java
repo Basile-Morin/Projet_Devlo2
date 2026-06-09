@@ -70,28 +70,28 @@ class GestionnaireFraudeTest {
     @Test
     void testSupprimerFormulaire() {
         Etudiant e1 = creerEtudiant("1", "MORIN", "Basile");
-        FormulaireFraude f = creerFormulaire(10, e1);
+        FormulaireFraude f = creerFormulaire(1, e1);
         gestionnaire.ajouterFormulaire(f);
 
-        boolean result = gestionnaire.supprimerFormulaire(10);
+        boolean result = gestionnaire.supprimerFormulaire(f.getId());
 
         assertTrue(result, "Le formulaire devrait être supprimé");
     }
 
     @Test
-    void testSupprimerFormulaire_formulaire() {
+    void testSupprimerFormulaire2() {
         Etudiant e1 = creerEtudiant("1", "MORIN", "Basile");
-        FormulaireFraude f = creerFormulaire(10, e1);
+        FormulaireFraude f = creerFormulaire(1, e1);
         gestionnaire.ajouterFormulaire(f);
 
-        gestionnaire.supprimerFormulaire(10);
+        gestionnaire.supprimerFormulaire(f.getId());
 
         assertTrue(gestionnaire.rechercherFormulairesParEtudiants(e1).isEmpty(), "Le gestionnaire devrait être vide");
     }
 
     @Test
     void testSupprimerFormulaire_idInexistant() {
-        boolean result = gestionnaire.supprimerFormulaire(999);
+        boolean result = gestionnaire.supprimerFormulaire(1);
 
         assertFalse(result, "Le formulaire devrait être supprimé");
     }
@@ -105,7 +105,7 @@ class GestionnaireFraudeTest {
         gestionnaire.ajouterFormulaire(f1);
         gestionnaire.ajouterFormulaire(f2);
 
-        gestionnaire.supprimerFormulaire(1);
+        gestionnaire.supprimerFormulaire(f1.getId());
 
         assertTrue(gestionnaire.rechercherFormulairesParEtudiants(e1).isEmpty(), "Le premier formulaire devrait être supprimé");
         assertEquals(1, gestionnaire.rechercherFormulairesParEtudiants(e2).size(),"Le deuxième formulaire ne devrait pas être supprimé");
