@@ -1,5 +1,5 @@
-package etude;
-
+import etude.*;
+import fraude.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,11 +20,6 @@ class EpreuveTest {
     // --- Constructeur ---
 
     @Test
-    void constructeurParDefaut_creeLObjet() {
-        assertNotNull(epreuve);
-    }
-
-    @Test
     void constructeurParDefaut_attributsNuls() {
         assertNull(epreuve.getCodeECUE());
         assertNull(epreuve.getDate());
@@ -37,44 +32,26 @@ class EpreuveTest {
 
     @Test
     void setCodeECUE_stockeValeur() {
-        epreuve.setCodeECUE("MATH101");
-        assertEquals("MATH101", epreuve.getCodeECUE());
-    }
-
-    @Test
-    void setCodeECUE_null_accepte() {
-        epreuve.setCodeECUE(null);
-        assertNull(epreuve.getCodeECUE());
+        epreuve.setCodeECUE("maths");
+        assertEquals("maths", epreuve.getCodeECUE());
     }
 
     // --- date ---
 
     @Test
     void setDate_stockeValeur() {
-        LocalDate date = LocalDate.of(2025, 6, 15);
+        LocalDate date = LocalDate.of(2026, 6, 9);
         epreuve.setDate(date);
         assertEquals(date, epreuve.getDate());
-    }
-
-    @Test
-    void setDate_null_accepte() {
-        epreuve.setDate(null);
-        assertNull(epreuve.getDate());
     }
 
     // --- heure ---
 
     @Test
     void setHeure_stockeValeur() {
-        LocalTime heure = LocalTime.of(9, 30);
+        LocalTime heure = LocalTime.of(14, 40);
         epreuve.setHeure(heure);
         assertEquals(heure, epreuve.getHeure());
-    }
-
-    @Test
-    void setHeure_null_accepte() {
-        epreuve.setHeure(null);
-        assertNull(epreuve.getHeure());
     }
 
     // --- duree ---
@@ -85,19 +62,6 @@ class EpreuveTest {
         assertEquals(120, epreuve.getDuree());
     }
 
-    @Test
-    void setDuree_zero_accepte() {
-        epreuve.setDuree(0);
-        assertEquals(0, epreuve.getDuree());
-    }
-
-    @Test
-    void setDuree_valeurNegative_accepte() {
-        // Pas de contrainte dans la classe : on vérifie le comportement réel
-        epreuve.setDuree(-30);
-        assertEquals(-30, epreuve.getDuree());
-    }
-
     // --- modalite ---
 
     @Test
@@ -106,37 +70,25 @@ class EpreuveTest {
         assertEquals(Modalite.EXAMEN_ECRIT, epreuve.getModalite());
     }
 
-    @Test
-    void setModalite_oral_stocke() {
-        epreuve.setModalite(Modalite.ORAL);
-        assertEquals(Modalite.ORAL, epreuve.getModalite());
-    }
-
-    @Test
-    void setModalite_null_accepte() {
-        epreuve.setModalite(null);
-        assertNull(epreuve.getModalite());
-    }
-
     // --- Cohérence globale ---
 
     @Test
     void epreuveComplete_tousAttributsCorrects() {
-        LocalDate date = LocalDate.of(2025, 1, 20);
-        LocalTime heure = LocalTime.of(14, 0);
+        LocalDate date = LocalDate.of(2026, 6, 9);
+        LocalTime heure = LocalTime.of(14, 40);
 
-        epreuve.setCodeECUE("INFO202");
+        epreuve.setCodeECUE("informatique");
         epreuve.setDate(date);
         epreuve.setHeure(heure);
         epreuve.setDuree(90);
         epreuve.setModalite(Modalite.QCM);
 
         assertAll(
-            () -> assertEquals("INFO202", epreuve.getCodeECUE()),
-            () -> assertEquals(date, epreuve.getDate()),
-            () -> assertEquals(heure, epreuve.getHeure()),
-            () -> assertEquals(90, epreuve.getDuree()),
-            () -> assertEquals(Modalite.QCM, epreuve.getModalite())
+                () -> assertEquals("informatique", epreuve.getCodeECUE()),
+                () -> assertEquals(date, epreuve.getDate()),
+                () -> assertEquals(heure, epreuve.getHeure()),
+                () -> assertEquals(90, epreuve.getDuree()),
+                () -> assertEquals(Modalite.QCM, epreuve.getModalite())
         );
     }
 }

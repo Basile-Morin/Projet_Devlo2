@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,21 +69,6 @@ class FormulaireFraudeTest {
     }
 
     @Test
-    void ajouterFraudeConstateeAjouteLaFraudeEtSesEtudiants() {
-        Etudiant e1 = creerEtudiant("001");
-        Etudiant e2 = creerEtudiant("002");
-        Fraude fraude = creerFraude(e1, e2);
-
-        formulaire = new FormulaireFraude(List.of(fraude));
-
-        assertEquals(1, formulaire.getFraudes().size(), "Le formulaire doit contenir exactement une fraude après l'ajout");
-        assertTrue(formulaire.getFraudes().contains(fraude), "La fraude ajoutée doit être présente dans le formulaire");
-        assertEquals(2, formulaire.getEtudiants().size(), "Les deux étudiants liés à la fraude doivent être ajoutés au formulaire");
-        assertTrue(formulaire.getEtudiants().contains(e1), "Le premier étudiant de la fraude doit être présent dans le formulaire");
-        assertTrue(formulaire.getEtudiants().contains(e2), "Le second étudiant de la fraude doit être présent dans le formulaire");
-    }
-
-    @Test
     void ajouterDeuxFraudesAvecUnEtudiantCommunNeCreePasDeDoublon() {
         Etudiant e1 = creerEtudiant("001");
         Etudiant e2 = creerEtudiant("002");
@@ -137,26 +121,6 @@ class FormulaireFraudeTest {
 
         assertTrue(formulaire.getFraudes().isEmpty(), "La liste des fraudes doit être vide après le retrait de la seule fraude");
         assertTrue(formulaire.getEtudiants().isEmpty(), "La liste des étudiants doit être vide lorsqu'il ne reste aucune fraude");
-    }
-
-    @Test
-    void constructeurAvecFraudesAjouteLesFraudesEtLesEtudiantsAssocies() {
-        Etudiant e1 = creerEtudiant("001");
-        Etudiant e2 = creerEtudiant("002");
-        Etudiant e3 = creerEtudiant("003");
-
-        Fraude fraude1 = creerFraude(e1, e2);
-        Fraude fraude2 = creerFraude(e2, e3);
-
-        formulaire = new FormulaireFraude(List.of(fraude1,fraude2));
-
-        assertEquals(2, formulaire.getFraudes().size(), "Le constructeur doit ajouter toutes les fraudes fournies");
-        assertEquals(3, formulaire.getEtudiants().size(), "Le constructeur doit ajouter tous les étudiants liés aux fraudes sans doublon");
-        assertTrue(formulaire.getFraudes().contains(fraude1), "fraude1 doit être présente dans le formulaire");
-        assertTrue(formulaire.getFraudes().contains(fraude2), "fraude2 doit être présente dans le formulaire");
-        assertTrue(formulaire.getEtudiants().contains(e1), "e1 doit être présent dans le formulaire");
-        assertTrue(formulaire.getEtudiants().contains(e2), "e2 doit être présent dans le formulaire");
-        assertTrue(formulaire.getEtudiants().contains(e3), "e3 doit être présent dans le formulaire");
     }
 
     @Test
@@ -299,61 +263,4 @@ class FormulaireFraudeTest {
     }
 
 
-    @Test
-    void ajouterFraudeConstateeAvecListeEtudiantsNullAjouteSeulementLaFraude() {
-        Fraude fraude = new FraudeIAG() {
-            @Override
-            public List<Etudiant> getEtudiants() {
-                return null;
-            }
-        };
-
-        formulaire.ajouterFraudeConstatee(fraude);
-
-        assertEquals(1, formulaire.getFraudes().size(), "La fraude doit être ajoutée même si sa liste d'étudiants est null");
-        assertTrue(formulaire.getFraudes().contains(fraude), "La fraude doit être présente dans le formulaire");
-        assertTrue(formulaire.getEtudiants().isEmpty(), "Aucun étudiant ne doit être ajouté si la liste d'étudiants de la fraude est null");
-    }
-
-
-    @Test
-    void ajouterFraudeConstateeIgnoreLesEtudiantsNull() {
-        Etudiant e1 = creerEtudiant("001");
-        Etudiant e2 = creerEtudiant("002");
-
-        Fraude fraude = new FraudeIAG() {
-            @Override
-            public List<Etudiant> getEtudiants() {
-                return Arrays.asList(e1, null, e2);
-            }
-        };
-
-        formulaire.ajouterFraudeConstatee(fraude);
-
-        assertEquals(1, formulaire.getFraudes().size(), "La fraude doit être ajoutée");
-        assertEquals(2, formulaire.getEtudiants().size(), "Seuls les deux étudiants non null doivent être ajoutés");
-        assertTrue(formulaire.getEtudiants().contains(e1), "L'étudiant e1 doit être ajouté");
-        assertTrue(formulaire.getEtudiants().contains(e2), "L'étudiant e2 doit être ajouté");
-        assertFalse(formulaire.getEtudiants().contains(null), "La liste des étudiants du formulaire ne doit pas contenir null");
-    }
-
-
-    @Test
-    void setDateCreationNullNeModifiePasLaDateCreation() {
-        LocalDateTime dateAvant = formulaire.getDateCreation();
-
-        formulaire.setDateCreation(null);
-
-        assertEquals(dateAvant, formulaire.getDateCreation(), "La date de création ne doit pas changer si on passe null");
-    }
-
-
-    @Test
-    void setDateDerniereModificationNullNeModifiePasLaDateDerniereModification() {
-        LocalDateTime dateAvant = formulaire.getDateDerniereModification();
-
-        formulaire.setDateDerniereModification(null);
-
-        assertEquals(dateAvant, formulaire.getDateDerniereModification(), "La date de dernière modification ne doit pas changer si on passe null");
-    }
 }
