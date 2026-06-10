@@ -1,0 +1,200 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' =========================
+' ENUMS
+' =========================
+
+enum Cursus {
+  E1
+  E2
+  E3E
+  E3A
+  E4
+  E5
+}
+
+enum Modalite {
+  EXAMEN_ECRIT
+  ORAL
+  QCM
+  SUR_ORDINATEUR
+  PROJET
+  TP
+}
+
+' =========================
+' CLASSES METIER
+' =========================
+
+class Etudiant {
+  - numeroApprenant : String
+  - nom : String
+  - prenom : String
+  - cursus : Cursus
+}
+
+class Epreuve {
+  - codeECUE : String
+  - date : LocalDate
+  - heure : LocalTime
+  - duree : int
+  - modalite : Modalite
+}
+
+' =========================
+' FRAUDES
+' =========================
+
+abstract class Fraude {
+  - dateReleve : LocalDate
+  - description : String
+  - contenu : String
+}
+
+class FraudeIAG {
+  - nomService : String
+}
+
+class FraudePapier {
+  - dimensions : String
+  - plie : boolean
+}
+
+class FraudeCalculatrice {
+  - marque : String
+  - programmeStocke : String
+}
+
+class FraudeIAGConnectee {
+  - adresseIP : String
+}
+
+Fraude <|-- FraudeIAG
+Fraude <|-- FraudePapier
+Fraude <|-- FraudeCalculatrice
+FraudeIAG <|-- FraudeIAGConnectee
+
+' =========================
+' FORMULAIRE
+' =========================
+
+class FormulaireFraude {
+  - id : int
+  - dateCreation : LocalDateTime
+  - dateDerniereModification : LocalDateTime
+  - epreuve : Epreuve
+  - etudiants : List<Etudiant>
+  - fraudes : List<Fraude>
+
+  + ajouterEtudiant(etudiant : Etudiant) : void
+  + ajouterFraude(fraude : Fraude) : void
+}
+
+FormulaireFraude "1" --> "1" Epreuve
+FormulaireFraude "1" --> "1..*" Etudiant
+FormulaireFraude "1" --> "1..*" Fraude
+
+' =========================
+' GESTION GENERALE
+' =========================
+
+class GestionnaireFraudes {
+  - formulaires : List<FormulaireFraude>
+  - etudiants : List<Etudiant>
+  - epreuves : List<Epreuve>
+
+  + ajouterFormulaire(formulaire : FormulaireFraude) : void
+  + supprimerFormulaire(id : int) : boolean
+  + rechercherFormulairesParEtudiant(etudiant : Etudiant) : List<FormulaireFraude>
+  + rechercherFormulairesParEpreuve(epreuve : Epreuve) : List<FormulaireFraude>
+  + rechercherEtudiantParNumero(numero : String) : Etudiant
+  + rechercherEtudiantsParNom(nom : String) : List<Etudiant>
+  + rechercherEtudiantsParPrenom(prenom : String) : List<Etudiant>
+}
+
+GestionnaireFraudes "1" --> "*" FormulaireFraude
+GestionnaireFraudes "1" --> "*" Etudiant
+GestionnaireFraudes "1" --> "*" Epreuve
+
+' =========================
+' STATISTIQUES
+' =========================
+
+class StatistiquesFraudes {
+  + nombreTotalFormulaires(formulaires : List<FormulaireFraude>) : int
+  + nombreEtudiantsDistincts(formulaires : List<FormulaireFraude>) : int
+  + nombreTotalFraudes(formulaires : List<FormulaireFraude>) : int
+  + moyenneFraudesParFormulaire(formulaires : List<FormulaireFraude>) : double
+  + ecartTypeFraudesParFormulaire(formulaires : List<FormulaireFraude>) : double
+}
+
+StatistiquesFraudes ..> FormulaireFraude
+
+' =========================
+' GRAPHE
+' =========================
+
+class GrapheFraudeurs {
+  - adjacences : Map<Etudiant, Set<Etudiant>>
+
+  + construireGraphe(formulaires : List<FormulaireFraude>) : void
+  + afficherGraphe() : void
+}
+
+GrapheFraudeurs ..> FormulaireFraude
+GrapheFraudeurs --> Etudiant
+
+' =========================
+' DONNEES DE TEST
+' =========================
+
+class JeuDonneesTest {
+  + creerDonneesTest() : GestionnaireFraudes
+}
+
+JeuDonneesTest ..> GestionnaireFraudes
+JeuDonneesTest ..> Etudiant
+JeuDonneesTest ..> Epreuve
+JeuDonneesTest ..> FormulaireFraude
+JeuDonneesTest ..> Fraude
+
+' =========================
+' INTERFACE CONSOLE
+' =========================
+
+class MenuConsole {
+  - gestionnaire : GestionnaireFraudes
+
+  + afficherMenu() : void
+  + lancer() : void
+  + ajouterFormulaire() : void
+  + supprimerFormulaire() : void
+  + afficherRecherches() : void
+  + afficherStatistiques() : void
+  + afficherGraphe() : void
+}
+
+MenuConsole --> GestionnaireFraudes
+MenuConsole ..> StatistiquesFraudes
+MenuConsole ..> GrapheFraudeurs
+
+' =========================
+' MAIN
+' =========================
+
+class Application {
+  + main(args : String[]) : void
+}
+
+Application ..> JeuDonneesTest
+Application ..> MenuConsole
+
+' =========================
+' LIENS AVEC ENUMS
+' =========================
+
+Etudiant --> Cursus
+Epreuve --> Modalite
+
+@enduml
