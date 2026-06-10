@@ -1,3 +1,5 @@
+import fraude.GestionnaireFraudes;
+
 import java.util.Scanner;
 
 public class Main {
@@ -18,7 +20,7 @@ public class Main {
         }
 
         if (choix == 1) {
-            gestionnaireFraudes = JeuDonneesTest.creerDonneesTest();
+            gestionnaireFraudes = JeuDonneesExemple.creerDonneesTest();
             System.out.println("Données de test chargées.");
         } else {
             gestionnaireFraudes = new GestionnaireFraudes();

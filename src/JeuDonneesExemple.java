@@ -1,13 +1,10 @@
 import etude.Epreuve;
 import etude.Etudiant;
-import fraude.Fraude;
-import fraude.FraudeCalculatrice;
-import fraude.FraudeIAG;
-import fraude.FraudePapier;
+import fraude.*;
 
 import java.util.List;
 
-public class JeuDonneesTest {
+public class JeuDonneesExemple {
 
     public static GestionnaireFraudes creerDonneesTest() {
         GestionnaireFraudes gestionnaire = new GestionnaireFraudes();

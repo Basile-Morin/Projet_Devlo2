@@ -2,11 +2,7 @@ import etude.Cursus;
 import etude.Epreuve;
 import etude.Etudiant;
 import etude.Modalite;
-import fraude.Fraude;
-import fraude.FraudeCalculatrice;
-import fraude.FraudeIAG;
-import fraude.FraudeIAGConnectee;
-import fraude.FraudePapier;
+import fraude.*;
 
 import java.awt.Point;
 import java.time.LocalDate;
@@ -148,6 +144,8 @@ public class MenuConsole {
 
         if (choix == 1 && !gestionnaire.getEpreuves().isEmpty()) {
             return choisirEpreuveExistante();
+        }else if(gestionnaire.getEpreuves().isEmpty()){
+            System.out.println("Aucune épreuve enregistrée, création d'une nouvelle épreuve");
         }
 
         return creerEpreuve();
@@ -166,26 +164,27 @@ public class MenuConsole {
     }
 
     private Epreuve creerEpreuve() {
-        Epreuve epreuve = new Epreuve();
+        while (true) {
+            try {
+                Epreuve epreuve = new Epreuve();
 
-        try {
-            String codeECUE = lireTexte("Code ECUE : ");
-            String date = lireTexte("Date de l'épreuve (AAAA-MM-JJ) : ");
-            String heure = lireTexte("Heure de l'épreuve (HH:MM) : ");
-            int duree = lireEntier("Durée en minutes : ");
-            Modalite modalite = choisirModalite();
+                String codeECUE = lireTexte("Code ECUE : ");
+                String date = lireTexte("Date de l'épreuve (AAAA-MM-JJ) : ");
+                String heure = lireTexte("Heure de l'épreuve (HH:MM) : ");
+                int duree = lireEntier("Durée en minutes : ");
+                Modalite modalite = choisirModalite();
 
-            epreuve.setCodeECUE(codeECUE);
-            epreuve.setDate(LocalDate.parse(date));
-            epreuve.setHeure(LocalTime.parse(heure));
-            epreuve.setDuree(duree);
-            epreuve.setModalite(modalite);
+                epreuve.setCodeECUE(codeECUE);
+                epreuve.setDate(LocalDate.parse(date));
+                epreuve.setHeure(LocalTime.parse(heure));
+                epreuve.setDuree(duree);
+                epreuve.setModalite(modalite);
 
-            return epreuve;
+                return epreuve;
 
-        } catch (Exception e) {
-            System.out.println("Erreur dans la création de l'épreuve.");
-            return null;
+            } catch (Exception e) {
+                System.out.println("Valeur incorrecte, veuillez recommencer la création de l'épreuve.");
+            }
         }
     }
 
@@ -247,9 +246,13 @@ public class MenuConsole {
 
         List<Etudiant> resultats = gestionnaire.rechercherEtudiantsParNom(nom);
 
-        System.out.println("Résultat(s) :");
-        for (Etudiant etudiant : resultats) {
-            afficherEtudiant(etudiant);
+        if (resultats!=null && !resultats.isEmpty()) {
+            System.out.println("Résultat(s) :");
+            for (Etudiant etudiant : resultats) {
+                afficherEtudiant(etudiant);
+            }
+        } else {
+            System.out.println("Aucun résultat trouvé");
         }
     }
 
@@ -258,9 +261,13 @@ public class MenuConsole {
 
         List<Etudiant> resultats = gestionnaire.rechercherEtudiantsParPrenom(prenom);
 
-        System.out.println("Résultat(s) :");
-        for (Etudiant etudiant : resultats) {
-            afficherEtudiant(etudiant);
+        if (resultats!=null && !resultats.isEmpty()) {
+            System.out.println("Résultat(s) :");
+            for (Etudiant etudiant : resultats) {
+                afficherEtudiant(etudiant);
+            }
+        } else {
+            System.out.println("Aucun résultat trouvé");
         }
     }
 
@@ -358,6 +365,8 @@ public class MenuConsole {
             }
 
             System.out.println("Id introuvable, création d'un nouveau formulaire.");
+        } else if (gestionnaire.getFormulaires().isEmpty()) {
+            System.out.println("Aucun formulaire enregistré, création d'un nouveau formulaire.");
         }
 
         //Création d'un formualire (on rentre dedans si on a saisi une mauvaise id dans le choix du formulaire)
@@ -545,10 +554,18 @@ public class MenuConsole {
     // =========================================================
 
     private int lireEntier(String message) {
-        System.out.print(message);
-        int valeur = scanner.nextInt();
-        scanner.nextLine();
-        return valeur;
+        while (true) {
+            System.out.print(message);
+
+            try {
+                int valeur = scanner.nextInt();
+                scanner.nextLine();
+                return valeur;
+            } catch (Exception e) {
+                System.out.println("Valeur incorrecte");
+                scanner.nextLine();
+            }
+        }
     }
 
     private String lireTexte(String message) {
@@ -568,7 +585,7 @@ public class MenuConsole {
     // =========================================================
 
     public static void main(String[] args) {
-        GestionnaireFraudes gestionnaire = JeuDonneesTest.creerDonneesTest();
+        GestionnaireFraudes gestionnaire = JeuDonneesExemple.creerDonneesTest();
         MenuConsole menu = new MenuConsole(gestionnaire);
         menu.lancer();
     }

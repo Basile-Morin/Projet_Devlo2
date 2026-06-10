@@ -159,7 +159,6 @@ public class FormulaireFraude {
 
     /**
      * Modifie la date de la dernière modification.
-     *
      * La modification est ignorée si la date est nulle.
      *
      * @param dateDerniereModification nouvelle date de modification
@@ -208,7 +207,6 @@ public class FormulaireFraude {
 
     /**
      * Modifie l'identifiant du formulaire.
-     *
      * !! à utiliser avec prudence car cela peut créer des formulaires avec des id identiques
      * @param id nouvel identifiant
      */
